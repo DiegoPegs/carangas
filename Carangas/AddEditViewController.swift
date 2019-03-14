@@ -20,6 +20,12 @@ class AddEditViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        if car != nil {
+            tfBrand.text = car.brand
+            tfName.text = car.name
+            scGasType.selectedSegmentIndex = car.gasType
+            tfPrice.text = "\(car.price)"
+        }
     }
     
     @IBAction func addEdit(_ sender: UIButton) {
@@ -46,5 +52,7 @@ class AddEditViewController: UIViewController {
         }
         
     }
+    
+    
 }
 
