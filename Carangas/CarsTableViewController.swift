@@ -13,16 +13,23 @@ class CarsTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        refreshControl?.addTarget(self, action: #selector(loadCars), for: UIControl.Event.valueChanged)
     }
+    
+    
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         print("Recuperando carros")
+        loadCars()
+    }
+    
+    @objc func loadCars(){
         REST.loadCars { [weak self] (loadedCars) in //weak para não guardar na meemoria uma instancia inteira
             self?.cars = loadedCars
             DispatchQueue.main.sync {
                 self?.tableView.reloadData()
+                self?.refreshControl?.endRefreshing()
             }
         }
     }
@@ -46,6 +53,7 @@ class CarsTableViewController: UITableViewController {
             let car = cars[indexPath.row]
             REST.applyOperation(.delete, car: car) { (success) in
                 if success {
+                    self.cars.remove(at: indexPath.row)
                     DispatchQueue.main.async {
                         tableView.deleteRows(at: [indexPath], with: .automatic)
                     }
